@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/stores/userStore';
 import { Calendar, Users, Loader2, ArrowRight } from 'lucide-react';
-
+import { SERVER_URL } from '@/utils/config';
 interface Room {
   _id: string;
   name: string;
@@ -23,6 +23,7 @@ export default function RecentRooms({ onRoomCountChange }: RecentRoomsProps) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
 
   useEffect(() => {
     const fetchRecentRooms = async () => {
@@ -36,7 +37,7 @@ export default function RecentRooms({ onRoomCountChange }: RecentRoomsProps) {
         setLoading(true);
         setError('');
         
-        const response = await fetch(`http://localhost:5000/api/rooms/recent/${user.id}`, {
+       const response = await fetch(`${SERVER_URL}/api/rooms/recent/${user.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -4,6 +4,7 @@ import { useState, ReactNode } from 'react';
 import RoomForm from './Roomform';
 import { useUserStore } from '@/stores/userStore';
 import { Play } from 'lucide-react';
+import { SERVER_URL } from '@/utils/config';
 
 interface FormData {
   name: string;
@@ -23,6 +24,7 @@ export default function CreateRoomButton({ className = '', children }: Props): R
   const [showForm, setShowForm] = useState(false);
 
   const handleFormSubmit = async (formData: FormData): Promise<void> => {
+    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000'; // Add this line
     try {
       // 1. Create room
       const res = await fetch('http://localhost:5000/api/rooms/create', {

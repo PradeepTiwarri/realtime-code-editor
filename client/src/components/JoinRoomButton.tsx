@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import JoinRoomModal from './JoinRoomModal';
 import { useUserStore } from '@/stores/userStore';
 import { Users } from 'lucide-react';
+import { SERVER_URL } from '@/utils/config';
 
 interface Props {
   /** Extra Tailwind classes supplied by the parent */
@@ -18,9 +19,11 @@ export default function JoinRoomButton({ className = '', children }: Props): Rea
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
-  const handleJoin = async (roomId: string): Promise<void> => {
+const handleJoin = async (roomId: string): Promise<void> => {
+    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000'; // Add this line
+
     try {
-      await fetch('http://localhost:5000/api/rooms/join', {
+      await fetch(`${SERVER_URL}/api/rooms/join`, { // Updated URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?.id, roomId }),
