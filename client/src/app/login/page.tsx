@@ -13,9 +13,13 @@ export default function LoginPage(): React.JSX.Element {
   const [error, setError] = useState<string>('');
   const setUser = useUserStore((s) => s.setUser);
 
-  const handleLogin = async (data: LoginData): Promise<void> => {
+ const handleLogin = async (data: LoginData): Promise<void> => {
+    // 👇 Add this line to get the correct URL (Render or Localhost)
+    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
+
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      // 👇 Update the fetch URL to use SERVER_URL
+      const res = await fetch(`${SERVER_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
