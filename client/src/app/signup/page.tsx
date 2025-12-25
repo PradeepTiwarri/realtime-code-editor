@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AuthForm from '@/components/AuthForm';
 import { useUserStore } from '@/stores/userStore';
+import { SERVER_URL } from '@/utils/config';
 
 type SignupData = {
   fullName: string;
@@ -19,7 +20,7 @@ export default function SignupPage(): React.JSX.Element {
 
   const handleSignup = async (data: SignupData): Promise<void> => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/signup', {
+      const res = await fetch(`${SERVER_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
