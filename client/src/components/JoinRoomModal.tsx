@@ -19,8 +19,12 @@ export default function JoinRoomModal({ onClose, onJoin }: JoinRoomModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-xl p-6 shadow-2xl w-full max-w-md transform transition-all">
+    // 👇 THIS DIV IS THE OVERLAY FIX
+    // bg-black/50 makes it semi-transparent. backdrop-blur-sm adds the blur effect.
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      
+      {/* Modal Content */}
+      <div className="bg-white rounded-xl p-6 shadow-2xl w-full max-w-md transform transition-all animate-in fade-in zoom-in duration-200">
         
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Join a Room</h2>
         
@@ -35,11 +39,6 @@ export default function JoinRoomModal({ onClose, onJoin }: JoinRoomModalProps) {
               placeholder="Enter Room ID" 
               value={roomId} 
               onChange={(e) => setRoomId(e.target.value)} 
-              /* Updated Class: 
-                 - text-gray-900 for visible typing
-                 - bg-white for clean background
-                 - placeholder:text-gray-500 for visible placeholder
-              */
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white placeholder:text-gray-500 transition-all"
             />
           </div>
