@@ -27,7 +27,7 @@ export default function CreateRoomButton({ className = '', children }: Props): R
     const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000'; // Add this line
     try {
       // 1. Create room
-      const res = await fetch('http://localhost:5000/api/rooms/create', {
+      const res = await fetch(`${SERVER_URL}/api/rooms/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
