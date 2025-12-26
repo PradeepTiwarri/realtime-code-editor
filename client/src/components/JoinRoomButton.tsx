@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import JoinRoomModal from './JoinRoomModal';
 import { useUserStore } from '@/stores/userStore';
 import { Users } from 'lucide-react';
-import { SERVER_URL } from '@/utils/config';
 
 interface Props {
   /** Extra Tailwind classes supplied by the parent */
@@ -19,18 +18,23 @@ export default function JoinRoomButton({ className = '', children }: Props): Rea
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
-const handleJoin = async (roomId: string): Promise<void> => {
-    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000'; // Add this line
+  const handleJoin = async (roomId: string): Promise<void> => {
+    // Ensure we use the correct environment variable
+    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000';
 
     try {
-      await fetch(`${SERVER_URL}/api/rooms/join`, { // Updated URL
+      await fetch(`${SERVER_URL}/api/rooms/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?.id, roomId }),
       });
+      
+      // Navigate to the room
       router.push(`/room/${roomId}`);
+      
     } catch (err) {
-      console.error(err);
+      console.error("Failed to join room:", err);
+      // Optional: Add error handling/toast notification here
     }
   };
 
@@ -42,7 +46,7 @@ const handleJoin = async (roomId: string): Promise<void> => {
           px-6 py-3 rounded-lg bg-blue-600 text-white font-medium
           hover:bg-blue-700 transition-colors
           disabled:opacity-50 disabled:cursor-not-allowed
-          flex items-center gap-2
+          flex items-center gap-2 shadow-sm
         `}
       >
         {children || (
@@ -53,6 +57,7 @@ const handleJoin = async (roomId: string): Promise<void> => {
         )}
       </button>
 
+      {/* Conditional Rendering of the Modal */}
       {showModal && (
         <JoinRoomModal onClose={() => setShowModal(false)} onJoin={handleJoin} />
       )}
