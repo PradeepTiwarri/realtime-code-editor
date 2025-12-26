@@ -19,7 +19,7 @@ export default function LoginPage(): React.JSX.Element {
 
     try {
       // 👇 Update the fetch URL to use SERVER_URL
-      const res = await fetch(`${SERVER_URL}/api/auth/login`, {
+      const res = await fetch(`${SERVER_URL}api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
