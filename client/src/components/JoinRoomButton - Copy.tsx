@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import JoinRoomModal from './JoinRoomModal';
 import { useUserStore } from '@/stores/userStore';
+import { SERVER_URL } from '@/utils/config';
 
 type Props = {
   /** Extra Tailwind classes supplied by the parent card */
@@ -17,7 +18,7 @@ export default function JoinRoomButton({ className = '' }: Props): React.JSX.Ele
 
   const handleJoin = async (roomId: string): Promise<void> => {
     try {
-      await fetch('http://localhost:5000/api/rooms/join', {
+      await fetch(`${SERVER_URL}/api/rooms/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user?.id, roomId }),

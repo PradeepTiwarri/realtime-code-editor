@@ -17,8 +17,8 @@ interface FormErrors {
 
 interface CreateRoomFormProps {
   onSubmit: (formData: FormData) => Promise<void>
-  onCancel?: () => void  // Made optional
-  onClose?: () => void   // Added onClose as alias
+  onCancel?: () => void
+  onClose?: () => void
 }
 
 const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onClose }) => {
@@ -38,7 +38,6 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
       [name]: value
     }))
 
-    // Clear error when user starts typing
     if (errors[name as keyof FormErrors]) {
       setErrors(prev => ({
         ...prev,
@@ -66,7 +65,6 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
     setIsSubmitting(true)
     try {
       await onSubmit(formData)
-      // Reset form on success
       setFormData({
         name: '',
         description: '',
@@ -83,19 +81,18 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
   }
 
   const handleCancel = () => {
-    // Support both onCancel and onClose
     if (onClose) onClose()
     if (onCancel) onCancel()
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white rounded-lg"> {/* Added bg-white to container */}
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Create New Room</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Room Name Field */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
             Room Name *
           </label>
           <input
@@ -104,18 +101,19 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            /* Updated class: text-gray-900, bg-white, placeholder:text-gray-500 */
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white placeholder:text-gray-500"
             placeholder="Enter room name"
             disabled={isSubmitting}
           />
           {errors.name && (
-            <p className="mt-2 text-sm text-red-600">{errors.name}</p>
+            <p className="mt-2 text-sm text-red-600 font-medium">{errors.name}</p>
           )}
         </div>
 
         {/* Room ID Field (Read-only) */}
         <div>
-          <label htmlFor="roomId" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="roomId" className="block text-sm font-semibold text-gray-900 mb-2">
             Room ID
           </label>
           <input
@@ -124,14 +122,15 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
             name="roomId"
             value={formData.roomId}
             readOnly
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+            /* Updated class: text-gray-700 for better visibility even when read-only */
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 font-mono"
           />
-          <p className="mt-1 text-xs text-gray-500">Auto-generated unique ID</p>
+          <p className="mt-1 text-xs text-gray-500 font-medium">Auto-generated unique ID</p>
         </div>
 
         {/* Description Field */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="description" className="block text-sm font-semibold text-gray-900 mb-2">
             Description
           </label>
           <textarea
@@ -140,7 +139,8 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
             value={formData.description}
             onChange={handleInputChange}
             rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            /* Updated class: text-gray-900, bg-white */
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 bg-white placeholder:text-gray-500"
             placeholder="Optional: Add a description for your room"
             disabled={isSubmitting}
           />
@@ -149,7 +149,7 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
         {/* Submit Error */}
         {errors.submit && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{errors.submit}</p>
+            <p className="text-sm text-red-700 font-medium">{errors.submit}</p>
           </div>
         )}
 
@@ -158,14 +158,14 @@ const CreateRoomForm: React.FC<CreateRoomFormProps> = ({ onSubmit, onCancel, onC
           <button
             type="button"
             onClick={handleCancel}
-            className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 rounded-lg font-semibold hover:bg-gray-300 transition-colors disabled:opacity-50"
+            className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 rounded-lg font-bold hover:bg-gray-300 transition-colors disabled:opacity-50"
             disabled={isSubmitting}
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-50"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-bold hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-50 shadow-sm"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Creating...' : 'Create Room'}
