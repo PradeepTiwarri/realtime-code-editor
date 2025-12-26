@@ -20,7 +20,7 @@ export default function SignupPage(): React.JSX.Element {
 
   const handleSignup = async (data: SignupData): Promise<void> => {
     try {
-      const res = await fetch(`${SERVER_URL}api/auth/signup`, {
+      const res = await fetch(`${SERVER_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
