@@ -21,7 +21,7 @@ const server = http.createServer(app);
 // App Middleware (Matched to your original code order)
 app.use(cors({
  
-origin: process.env.FRONTEND_URL || "http://localhost:3000",
+origin: process.env.FRONTEND_URL|| "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
