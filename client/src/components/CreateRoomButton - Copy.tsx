@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import RoomForm from './Roomform';
 import { useUserStore } from '@/stores/userStore';
+import { SERVER_URL } from '@/utils/config';
 
 interface FormData {
   name: string;
@@ -21,7 +22,7 @@ export default function CreateRoomButton({ className = '' }: Props): React.JSX.E
   const handleFormSubmit = async (formData: FormData): Promise<void> => {
     try {
       // 1. create room
-      const res = await fetch('http://localhost:5000/api/rooms/create', {
+      const res = await fetch(`${SERVER_URL}/api/rooms/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -34,7 +35,7 @@ export default function CreateRoomButton({ className = '' }: Props): React.JSX.E
       if (!res.ok) throw new Error('Failed to create room');
 
       // 2. join room
-      await fetch('http://localhost:5000/api/rooms/join', {
+      await fetch(`${SERVER_URL}/api/rooms/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roomId: formData.roomId, userId: user?.id }),
