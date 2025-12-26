@@ -28,7 +28,7 @@ function startVersionSaver(roomId, getCurrentCodeFn) {
 const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-origin: process.env.FRONTEND_URL || "http://localhost:3000", credentials: true },
+    origin: process.env.FRONTEND_URL|| "http://localhost:3000", credentials: true },
     transports: ['websocket', 'polling'],
   });
 
