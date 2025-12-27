@@ -42,7 +42,7 @@ export default function Navbar({ onlineUsers = [], roomId, onShowHistory }: Navb
   const copyRoomId = () => {
     if (roomId) {
       navigator.clipboard.writeText(roomId);
-      alert('Room ID copied to clipboard!');
+      
       setIsSettingsDropdownOpen(false);
     }
   };
