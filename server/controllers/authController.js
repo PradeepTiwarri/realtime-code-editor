@@ -9,7 +9,7 @@ const signup= async(req,res)=>{
     return res.status(400).json({ error: 'Missing required fields' });
   }
     const {fullName,email,password}=req.body
-    console.log(req.body.fullName)
+  //  console.log(req.body.fullName)
     try {
         const existingUser=await User.findOne({email})
         if(existingUser){
@@ -54,10 +54,10 @@ const signup= async(req,res)=>{
 
 const login=async(req,res)=>{
     const {email,password}=req.body;
-    console.log("login body",req.body)
+  //  console.log("login body",req.body)
     try {
         const user = await User.findOne({email})
-        console.log(user)
+     //   console.log(user)
         
         if(!user){
             return res.status(400).json({message:"Invalid credentials"})

@@ -90,7 +90,7 @@ router.post('/create', async (req, res) => {
 // ✅ OPTIONAL: Add duplicate join prevention back
 router.post("/join", async (req, res) => {
   try {
-    console.log("📦 Join request data:", req.body);
+   // console.log("📦 Join request data:", req.body);
     const { userId, roomId } = req.body;
 
     // Validate required fields
@@ -107,7 +107,7 @@ router.post("/join", async (req, res) => {
     const userRoom = new UserRoom({ userId, roomId });
     await userRoom.save();
     
-    console.log("✅ UserRoom entry created successfully");
+   // console.log("✅ UserRoom entry created successfully");
     res.status(201).json({ message: "Room joined successfully" });
   } catch (err) {
     console.error("❌ Error joining room:", err);
@@ -117,19 +117,18 @@ router.post("/join", async (req, res) => {
 
 
 // Get recent rooms for a user
-// ✅ FIXED: Populate roomId instead of createdBy
-// ✅ BETTER: Use URL parameter for GET requests
+
 router.get("/recent/:userId", async (req, res) => {
   try {
     const { userId } = req.params; // Get from URL params, not body
 
-    console.log('📦 Getting recent rooms for userId:', userId);
+   // console.log('📦 Getting recent rooms for userId:', userId);
 
     const userRooms = await UserRoom.find({ userId })
       .sort({ joinedAt: -1 })
       .limit(10);
 
-    console.log('📋 Found userRooms:', userRooms);
+   // console.log('📋 Found userRooms:', userRooms);
 
     const roomPromises = userRooms.map(async (ur) => {
       const room = await Room.findOne({ roomId: ur.roomId });
@@ -148,7 +147,7 @@ router.get("/recent/:userId", async (req, res) => {
     
     res.json(validRooms);
   } catch (err) {
-    console.error('❌ Error getting recent rooms:', err);
+  //  console.error('❌ Error getting recent rooms:', err);
     res.status(500).json({ error: err.message });
   }
 });
