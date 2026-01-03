@@ -8,6 +8,8 @@ const roomCodeMap = {};
 const roomSaveTimers = {};
 const roomChatHistory = {};
 const roomVoiceUsers = {}; // Track users in voice chat: { roomId: [{ socketId, username }] }
+const roomWhiteboardUsers = {}; // Track users viewing whiteboard: { roomId: [username] }
+const roomWhiteboardData = {}; // Store whiteboard elements: { roomId: elements[] }
 
 function startVersionSaver(roomId, getCurrentCodeFn) {
   const versionInterval = setInterval(async () => {
@@ -248,6 +250,66 @@ const initSocket = (server) => {
     });
 
     // ==================== END VOICE CHAT ====================
+
+    // ==================== WHITEBOARD EVENTS ====================
+
+    // User joins whiteboard
+    socket.on("WHITEBOARD_JOIN", ({ roomId, username }) => {
+      if (!roomWhiteboardUsers[roomId]) {
+        roomWhiteboardUsers[roomId] = [];
+      }
+      if (!roomWhiteboardUsers[roomId].includes(username)) {
+        roomWhiteboardUsers[roomId].push(username);
+      }
+
+      // Send current whiteboard state to joining user
+      if (roomWhiteboardData[roomId]) {
+        socket.emit("WHITEBOARD_INIT", {
+          elements: roomWhiteboardData[roomId]
+        });
+      }
+
+      // Broadcast updated user list
+      io.to(roomId).emit("WHITEBOARD_USERS", {
+        users: roomWhiteboardUsers[roomId]
+      });
+
+      console.log(`🎨 ${username} joined whiteboard in room ${roomId}`);
+    });
+
+    // User leaves whiteboard
+    socket.on("WHITEBOARD_LEAVE", ({ roomId }) => {
+      if (roomWhiteboardUsers[roomId]) {
+        roomWhiteboardUsers[roomId] = roomWhiteboardUsers[roomId].filter(
+          u => u !== socket.username
+        );
+
+        io.to(roomId).emit("WHITEBOARD_USERS", {
+          users: roomWhiteboardUsers[roomId]
+        });
+
+        // Clean up if no users
+        if (roomWhiteboardUsers[roomId].length === 0) {
+          delete roomWhiteboardUsers[roomId];
+          // Keep whiteboard data for a while in case users rejoin
+        }
+      }
+      console.log(`🎨 ${socket.username} left whiteboard in room ${roomId}`);
+    });
+
+    // Whiteboard update from user
+    socket.on("WHITEBOARD_UPDATE", ({ roomId, elements, username }) => {
+      // Store the latest state
+      roomWhiteboardData[roomId] = elements;
+
+      // Broadcast to other users in the room
+      socket.to(roomId).emit("WHITEBOARD_UPDATE", {
+        elements,
+        username
+      });
+    });
+
+    // ==================== END WHITEBOARD ====================
 
     socket.on("disconnect", () => handleUserDisconnect(socket));
   });

@@ -13,9 +13,10 @@ interface RoomHeaderProps {
   onlineUsers?: User[];
   username?: string;
   onShowHistory?: () => void;
+  onShowWhiteboard?: () => void;
 }
 
-export default function RoomHeader({ onlineUsers = [], username, onShowHistory }: RoomHeaderProps) {
+export default function RoomHeader({ onlineUsers = [], username, onShowHistory, onShowWhiteboard }: RoomHeaderProps) {
   const params = useParams();
   const roomId = params?.roomId as string;
 
@@ -26,6 +27,7 @@ export default function RoomHeader({ onlineUsers = [], username, onShowHistory }
         roomId={roomId}
         username={username}
         onShowHistory={onShowHistory}
+        onShowWhiteboard={onShowWhiteboard}
       />
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Users, ChevronDown, Settings, Clock, Copy, LogOut, Menu, X } from 'lucide-react';
+import { Users, ChevronDown, Settings, Clock, Copy, LogOut, Menu, X, PenTool } from 'lucide-react';
 import VoiceChat from './VoiceChat';
 
 interface User {
@@ -16,9 +16,10 @@ interface NavbarProps {
   roomId?: string;
   username?: string;
   onShowHistory?: () => void;
+  onShowWhiteboard?: () => void;
 }
 
-export default function Navbar({ onlineUsers = [], roomId, username = '', onShowHistory }: NavbarProps) {
+export default function Navbar({ onlineUsers = [], roomId, username = '', onShowHistory, onShowWhiteboard }: NavbarProps) {
   const router = useRouter();
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
@@ -76,6 +77,18 @@ export default function Navbar({ onlineUsers = [], roomId, username = '', onShow
           {/* Voice Chat */}
           {roomId && username && (
             <VoiceChat roomId={roomId} username={username} />
+          )}
+
+          {/* Whiteboard Button */}
+          {roomId && (
+            <button
+              onClick={onShowWhiteboard}
+              className="flex items-center gap-2 px-3 lg:px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors"
+              title="Open Whiteboard"
+            >
+              <PenTool className="w-5 h-5" />
+              <span className="font-medium hidden lg:inline">Whiteboard</span>
+            </button>
           )}
 
           {/* Settings Dropdown */}
@@ -227,6 +240,17 @@ export default function Navbar({ onlineUsers = [], roomId, username = '', onShow
           {/* Settings Section */}
           {roomId && (
             <div className="divide-y divide-slate-600">
+              <button
+                onClick={() => {
+                  onShowWhiteboard?.();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full px-4 py-3 hover:bg-slate-600 transition-colors flex items-center gap-3 text-left"
+              >
+                <PenTool className="w-5 h-5 text-purple-400" />
+                <span className="text-white text-sm font-medium">Whiteboard</span>
+              </button>
+
               <button
                 onClick={() => {
                   onShowHistory?.();

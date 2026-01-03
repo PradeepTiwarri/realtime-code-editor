@@ -9,6 +9,7 @@ import RoomPageConnection from '@/components/RoomPageConnection';
 import { useUserStore } from '@/stores/userStore';
 import { useParams } from 'next/navigation';
 import VersionHistoryModal from '@/components/VersionHistoryModal';
+import WhiteboardModal from '@/components/WhiteboardModal';
 import { MessageSquare } from 'lucide-react';
 
 export default function RoomPage() {
@@ -16,6 +17,7 @@ export default function RoomPage() {
   const roomId = params?.roomId as string;
   const [language, setLanguage] = useState('javascript');
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showWhiteboard, setShowWhiteboard] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false); // Start closed on mobile
 
   // ✅ Retrieve state from Zustand store
@@ -81,6 +83,7 @@ export default function RoomPage() {
         onlineUsers={onlineUsers}
         username={user.fullName}
         onShowHistory={() => setShowVersionHistory(true)}
+        onShowWhiteboard={() => setShowWhiteboard(true)}
       />
 
       {/* Room Connection Component */}
@@ -139,6 +142,16 @@ export default function RoomPage() {
         <VersionHistoryModal
           roomId={roomId}
           onClose={() => setShowVersionHistory(false)}
+        />
+      )}
+
+      {/* Whiteboard Modal */}
+      {showWhiteboard && (
+        <WhiteboardModal
+          isOpen={showWhiteboard}
+          onClose={() => setShowWhiteboard(false)}
+          roomId={roomId}
+          username={user.fullName}
         />
       )}
     </div>
