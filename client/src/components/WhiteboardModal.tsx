@@ -50,7 +50,7 @@ export default function WhiteboardModal({ isOpen, onClose, roomId, username }: W
         try {
             const editor = editorRef.current;
 
-            // Get all shape IDs on the current page
+            // Get all shape IDs
             const shapeIds = editor.getCurrentPageShapeIds();
 
             if (shapeIds.size === 0) {
@@ -59,77 +59,45 @@ export default function WhiteboardModal({ isOpen, onClose, roomId, username }: W
                 return;
             }
 
-            // In tldraw v4, we use a different approach - render the canvas content
-            // Get the canvas element from the editor
-            const container = document.querySelector('.tl-canvas');
+            // Export to SVG first (tldraw v3 API), then convert to PNG
+            const svg = await editor.getSvg([...shapeIds], {
+                scale: 2,
+                background: true,
+            });
 
-            if (container) {
-                // Use html2canvas approach by capturing the SVG content
-                const svgElement = container.querySelector('svg');
+            if (svg) {
+                // Convert SVG to PNG using canvas
+                const svgString = new XMLSerializer().serializeToString(svg);
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
 
-                if (svgElement) {
-                    // Clone the SVG to avoid modifying the original
-                    const clonedSvg = svgElement.cloneNode(true) as SVGElement;
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx?.drawImage(img, 0, 0);
 
-                    // Get the bounding box of all shapes
-                    const bounds = editor.getSelectionPageBounds() || editor.getCurrentPageBounds();
-
-                    if (bounds) {
-                        // Set viewBox to capture content
-                        const padding = 20;
-                        clonedSvg.setAttribute('viewBox', `${bounds.x - padding} ${bounds.y - padding} ${bounds.width + padding * 2} ${bounds.height + padding * 2}`);
-                        clonedSvg.setAttribute('width', String(bounds.width + padding * 2));
-                        clonedSvg.setAttribute('height', String(bounds.height + padding * 2));
-                    }
-
-                    // Add white background
-                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    rect.setAttribute('x', bounds ? String(bounds.x - 20) : '0');
-                    rect.setAttribute('y', bounds ? String(bounds.y - 20) : '0');
-                    rect.setAttribute('width', '100%');
-                    rect.setAttribute('height', '100%');
-                    rect.setAttribute('fill', 'white');
-                    clonedSvg.insertBefore(rect, clonedSvg.firstChild);
-
-                    const svgString = new XMLSerializer().serializeToString(clonedSvg);
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const img = new Image();
-
-                    img.onload = () => {
-                        canvas.width = img.width * 2; // Scale for better quality
-                        canvas.height = img.height * 2;
-                        ctx?.scale(2, 2);
-                        ctx?.drawImage(img, 0, 0);
-
-                        // Download as PNG
-                        const link = document.createElement('a');
-                        link.download = `whiteboard-${roomId}-${Date.now()}.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        setIsExporting(false);
-                    };
-
-                    img.onerror = () => {
-                        // Fallback: download as SVG
-                        const blob = new Blob([svgString], { type: 'image/svg+xml' });
-                        const url = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.download = `whiteboard-${roomId}-${Date.now()}.svg`;
-                        link.href = url;
-                        link.click();
-                        URL.revokeObjectURL(url);
-                        setIsExporting(false);
-                    };
-
-                    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
-                } else {
-                    alert('Could not find canvas content to export.');
+                    // Download as PNG
+                    const link = document.createElement('a');
+                    link.download = `whiteboard-${roomId}-${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
                     setIsExporting(false);
-                }
-            } else {
-                alert('Could not find whiteboard canvas.');
-                setIsExporting(false);
+                };
+
+                img.onerror = () => {
+                    // Fallback: download as SVG
+                    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = `whiteboard-${roomId}-${Date.now()}.svg`;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    setIsExporting(false);
+                };
+
+                img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
             }
         } catch (e) {
             console.error('Export error:', e);

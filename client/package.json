@@ -19,7 +19,7 @@
     "react-dom": "^19.2.3",
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.8.1",
-    "tldraw": "^4.2.1",
+    "tldraw": "^3.9.0",
     "use-debounce": "^10.0.5",
     "uuid": "^11.1.0",
     "uuid-v4-validator": "^2.0.0",
