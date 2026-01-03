@@ -23,7 +23,7 @@ export default function RecentRooms({ onRoomCountChange }: RecentRoomsProps) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
 
   useEffect(() => {
     const fetchRecentRooms = async () => {
@@ -36,8 +36,8 @@ export default function RecentRooms({ onRoomCountChange }: RecentRoomsProps) {
       try {
         setLoading(true);
         setError('');
-        
-       const response = await fetch(`${SERVER_URL}/api/rooms/recent/${user.id}`, {
+
+        const response = await fetch(`${SERVER_URL}/api/rooms/recent/${user.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -117,33 +117,33 @@ export default function RecentRooms({ onRoomCountChange }: RecentRoomsProps) {
         <div
           key={room._id}
           onClick={() => handleRoomClick(room.roomId)}
-          className="p-4 border border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group bg-white"
+          className="p-3 sm:p-4 border border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group bg-white"
         >
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0">
             <div className="flex-1">
-              <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">
+              <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-1 text-sm sm:text-base">
                 {room.name}
               </h4>
               {room.description && (
-                <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+                <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 line-clamp-2">
                   {room.description}
                 </p>
               )}
-              <div className="flex items-center gap-4 text-xs text-gray-400">
+              <div className="flex items-center gap-3 sm:gap-4 text-xs text-gray-400">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   {formatDate(room.joinedAt)}
                 </span>
-                <span className="font-mono">
+                <span className="font-mono text-xs">
                   {room.roomId.substring(0, 8)}
                 </span>
               </div>
             </div>
-            <div className="ml-4 flex items-center gap-2">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <div className="flex items-center justify-between sm:justify-end gap-2 sm:ml-4">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                 Active
               </span>
-              <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
             </div>
           </div>
         </div>

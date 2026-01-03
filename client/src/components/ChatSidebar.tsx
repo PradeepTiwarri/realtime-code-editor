@@ -107,7 +107,7 @@ export default function ChatSidebar({ id, name, onClose }: ChatSidebarProps) {
   };
 
   return (
-    <div className="w-80 h-full bg-slate-800 flex flex-col">
+    <div className="w-full lg:w-80 h-full bg-slate-800 flex flex-col">
       {/* Header with Connection Status and Close Button */}
       <div className="px-4 py-3 bg-slate-900 border-b border-slate-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ export default function ChatSidebar({ id, name, onClose }: ChatSidebarProps) {
       </div>
 
       {/* Chat Messages */}
-      <div 
+      <div
         className="flex-1 overflow-y-auto p-4 space-y-3"
         style={{
           scrollbarWidth: 'thin',
@@ -151,20 +151,18 @@ export default function ChatSidebar({ id, name, onClose }: ChatSidebarProps) {
         ) : (
           messages.map((msg, index) => {
             const isMyMessage = msg.sender === name;
-            
+
             return (
-              <div 
-                key={index} 
-                className={`rounded-lg p-3 space-y-1 ${
-                  isMyMessage 
-                    ? 'bg-emerald-700 ml-8' 
+              <div
+                key={index}
+                className={`rounded-lg p-3 space-y-1 ${isMyMessage
+                    ? 'bg-emerald-700 ml-8'
                     : 'bg-slate-700 mr-8'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`font-semibold text-sm ${
-                    isMyMessage ? 'text-emerald-100' : 'text-blue-400'
-                  }`}>
+                  <span className={`font-semibold text-sm ${isMyMessage ? 'text-emerald-100' : 'text-blue-400'
+                    }`}>
                     {msg.sender}
                     {isMyMessage && (
                       <span className="ml-1 text-xs text-emerald-300">(You)</span>

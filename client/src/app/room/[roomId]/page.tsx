@@ -16,19 +16,32 @@ export default function RoomPage() {
   const roomId = params?.roomId as string;
   const [language, setLanguage] = useState('javascript');
   const [showVersionHistory, setShowVersionHistory] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false); // Start closed on mobile
 
   // ✅ Retrieve state from Zustand store
   const hasHydrated = useUserStore((state) => state.hasHydrated);
   const user = useUserStore((state) => state.user);
-  const onlineUsernames = useUserStore((state) => state.onlineUsers); // From updated store
+  const onlineUsernames = useUserStore((state) => state.onlineUsers);
 
-  // ✅ Transform the array of strings into the object format RoomHeader expects
+  // ✅ Transform the array of strings into object format
   const onlineUsers = onlineUsernames.map((username, index) => ({
-    id: index.toString(), // Generating a temporary ID for the UI
+    id: index.toString(),
     name: username,
     isYou: username === user?.fullName,
   }));
+
+  // Open chat by default on larger screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsChatOpen(true);
+      }
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (hasHydrated) {
@@ -38,7 +51,7 @@ export default function RoomPage() {
 
   if (!hasHydrated) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white px-4">
         <div className="text-center">
           <div className="relative w-16 h-16 mx-auto mb-4">
             <div className="absolute inset-0 rounded-full border-4 border-blue-200"></div>
@@ -52,7 +65,7 @@ export default function RoomPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white px-4">
         <div className="text-center">
           <p className="text-xl mb-4">No user found</p>
           <p className="text-gray-400">Please log in again</p>
@@ -70,7 +83,7 @@ export default function RoomPage() {
         onShowHistory={() => setShowVersionHistory(true)}
       />
 
-      {/* Room Connection Component (Handles Socket logic and store updates) */}
+      {/* Room Connection Component */}
       <RoomPageConnection />
 
       {/* Main Content Area */}
@@ -80,9 +93,9 @@ export default function RoomPage() {
           <MonacoEditor language={language} />
         </div>
 
-        {/* Chat Sidebar with Slide Animation */}
+        {/* Desktop: Chat Sidebar with Slide Animation */}
         <div
-          className={`transition-all duration-300 ease-in-out ${isChatOpen ? 'w-80' : 'w-0'
+          className={`hidden lg:block transition-all duration-300 ease-in-out ${isChatOpen ? 'w-80' : 'w-0'
             } overflow-hidden bg-slate-800 border-l border-slate-700`}
         >
           {isChatOpen && (
@@ -94,14 +107,29 @@ export default function RoomPage() {
           )}
         </div>
 
+        {/* Mobile/Tablet: Full-screen Chat Overlay */}
+        {isChatOpen && (
+          <div className="lg:hidden fixed inset-0 z-40 bg-slate-900/95 backdrop-blur-sm">
+            <div className="h-full flex flex-col">
+              <ChatSidebar
+                id={user.id}
+                name={user.fullName}
+                onClose={() => setIsChatOpen(false)}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Floating Chat Toggle Button */}
         {!isChatOpen && (
           <button
             onClick={() => setIsChatOpen(true)}
-            className="fixed bottom-6 right-6 p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl transition-all z-50 hover:scale-110"
+            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 p-3 sm:p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl transition-all z-50 hover:scale-110"
             title="Open Chat"
           >
-            <MessageSquare className="w-6 h-6" />
+            <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
+            {/* Notification badge placeholder */}
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-900"></span>
           </button>
         )}
       </div>

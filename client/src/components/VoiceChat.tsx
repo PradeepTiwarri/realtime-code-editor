@@ -89,11 +89,14 @@ export default function VoiceChat({ roomId, username }: VoiceChatProps) {
             {/* Main Voice Button */}
             <button
                 onClick={handleMainButtonClick}
-                className={`flex items-center gap-2 px-4 py-2 text-white rounded-lg transition-all ${getButtonStyles()}`}
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-white rounded-lg transition-all ${getButtonStyles()}`}
                 disabled={isConnecting}
             >
                 {getIcon()}
-                <span className="font-medium">{getButtonText()}</span>
+                <span className="font-medium text-sm sm:text-base hidden sm:inline">{getButtonText()}</span>
+                <span className="font-medium text-sm sm:hidden">
+                    {isInVoice ? voiceUsers.length : ''}
+                </span>
                 {isInVoice && !isConnecting && (
                     <ChevronDown
                         className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
@@ -111,7 +114,7 @@ export default function VoiceChat({ roomId, username }: VoiceChatProps) {
 
             {/* Dropdown Menu */}
             {isDropdownOpen && isInVoice && (
-                <div className="absolute right-0 top-full mt-2 w-64 bg-slate-700 border border-slate-600 rounded-lg shadow-2xl overflow-hidden z-50">
+                <div className="absolute right-0 top-full mt-2 w-56 sm:w-64 bg-slate-700 border border-slate-600 rounded-lg shadow-2xl overflow-hidden z-50">
                     {/* Header */}
                     <div className="p-3 border-b border-slate-600 bg-slate-800">
                         <div className="flex items-center justify-between">
@@ -130,8 +133,8 @@ export default function VoiceChat({ roomId, username }: VoiceChatProps) {
                         <button
                             onClick={toggleMute}
                             className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-colors ${isMuted
-                                    ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30'
-                                    : 'bg-slate-600 text-white hover:bg-slate-500'
+                                ? 'bg-red-600/20 text-red-400 hover:bg-red-600/30'
+                                : 'bg-slate-600 text-white hover:bg-slate-500'
                                 }`}
                         >
                             {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}

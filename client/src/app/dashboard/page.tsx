@@ -99,7 +99,7 @@ export default function DashboardPage(): React.JSX.Element {
           <div className="flex items-center justify-between">
             {/* Brand Name - Extreme Left */}
             <div className="flex items-center">
-              <h1 className="text-3xl font-bold">
+              <h1 className="text-2xl sm:text-3xl font-bold">
                 <span className="text-gray-900">Code</span>
                 <span className="text-blue-600">Sync</span>
               </h1>
@@ -138,7 +138,7 @@ export default function DashboardPage(): React.JSX.Element {
             <span className="text-sm font-medium text-gray-700">Welcome back to your workspace</span>
           </div>
 
-          <h2 className="text-5xl sm:text-6xl font-bold mb-6 text-gray-900">
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-gray-900">
             Hello, <span className="text-blue-600">{user ? user.fullName.split(' ')[0] : 'Developer'}</span>
             <span className="inline-block animate-wave ml-2"></span>
           </h2>
@@ -148,12 +148,12 @@ export default function DashboardPage(): React.JSX.Element {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex gap-4 justify-center flex-wrap">
-            <CreateRoomButton className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
+            <CreateRoomButton className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
               <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span>Create Room</span>
             </CreateRoomButton>
-            <JoinRoomButton className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2">
+            <JoinRoomButton className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2">
               <Users className="w-5 h-5" />
               <span>Join Room</span>
             </JoinRoomButton>
