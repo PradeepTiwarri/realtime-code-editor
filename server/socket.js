@@ -29,9 +29,17 @@ function startVersionSaver(roomId, getCurrentCodeFn) {
 }
 
 const initSocket = (server) => {
+  // Allowed origins for Socket.io CORS
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    process.env.FRONTEND_URL,
+  ].filter(Boolean);
+
   const io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || "http://localhost:3000", credentials: true
+      origin: allowedOrigins,
+      credentials: true
     },
     transports: ['websocket', 'polling'],
   });
@@ -263,9 +271,9 @@ const initSocket = (server) => {
       }
 
       // Send current whiteboard state to joining user
-      if (roomWhiteboardData[roomId]) {
+      if (roomWhiteboardData[roomId] && roomWhiteboardData[roomId].length > 0) {
         socket.emit("WHITEBOARD_INIT", {
-          elements: roomWhiteboardData[roomId]
+          records: roomWhiteboardData[roomId]
         });
       }
 
@@ -297,15 +305,39 @@ const initSocket = (server) => {
       console.log(`🎨 ${socket.username} left whiteboard in room ${roomId}`);
     });
 
-    // Whiteboard update from user
-    socket.on("WHITEBOARD_UPDATE", ({ roomId, elements, username }) => {
-      // Store the latest state
-      roomWhiteboardData[roomId] = elements;
+    // Whiteboard update from user (records-based for tldraw)
+    socket.on("WHITEBOARD_UPDATE", ({ roomId, records, username }) => {
+      // Initialize records array if needed
+      if (!roomWhiteboardData[roomId]) {
+        roomWhiteboardData[roomId] = [];
+      }
+
+      // Merge records - update existing or add new
+      if (records && Array.isArray(records)) {
+        for (const record of records) {
+          if (record.deleted) {
+            // Remove deleted records
+            roomWhiteboardData[roomId] = roomWhiteboardData[roomId].filter(
+              r => r.id !== record.id
+            );
+          } else {
+            // Update or add record
+            const existingIndex = roomWhiteboardData[roomId].findIndex(
+              r => r.id === record.id
+            );
+            if (existingIndex >= 0) {
+              roomWhiteboardData[roomId][existingIndex] = record;
+            } else {
+              roomWhiteboardData[roomId].push(record);
+            }
+          }
+        }
+      }
 
       // Broadcast to other users in the room
       socket.to(roomId).emit("WHITEBOARD_UPDATE", {
-        elements,
-        username
+        records,
+        senderUsername: username
       });
     });
 
