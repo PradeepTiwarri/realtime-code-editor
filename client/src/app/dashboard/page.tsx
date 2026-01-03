@@ -6,10 +6,10 @@ import CreateRoomButton from '@/components/CreateRoomButton';
 import JoinRoomButton from '@/components/JoinRoomButton';
 import RecentRooms from '@/components/RecentRooms';
 import { useUserStore } from '@/stores/userStore';
-import { 
-  Code2, 
-  Users, 
-  MessageSquare, 
+import {
+  Code2,
+  Users,
+  MessageSquare,
   Clock,
   Shield,
   Zap,
@@ -94,42 +94,39 @@ export default function DashboardPage(): React.JSX.Element {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header - Full width with extreme left/right alignment */}
       {/* Header - Full width with extreme left/right alignment */}
-<header className="bg-white sticky top-0 z-50 shadow-sm">
-  <div className="w-full px-4 py-4">
-    <div className="flex items-center justify-between">
-      {/* Logo - Extreme Left */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
-          <Code2 className="w-6 h-6 text-white" />
-        </div>
-        <h1 className="text-3xl font-bold">
-          <span className="text-gray-900">Code</span>
-          <span className="text-blue-600">Sync</span>
-        </h1>
-      </div>
+      <header className="bg-white sticky top-0 z-50 shadow-sm">
+        <div className="w-full px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Brand Name - Extreme Left */}
+            <div className="flex items-center">
+              <h1 className="text-3xl font-bold">
+                <span className="text-gray-900">Code</span>
+                <span className="text-blue-600">Sync</span>
+              </h1>
+            </div>
 
-      {/* User Info - Extreme Right */}
-      {user && (
-        <div className="flex items-center gap-4">
-          <div className="text-right hidden sm:block">
-            <p className="text-sm font-semibold text-gray-900">{user.fullName}</p>
-            <p className="text-xs text-gray-500">{user.email}</p>
+            {/* User Info - Extreme Right */}
+            {user && (
+              <div className="flex items-center gap-4">
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm font-semibold text-gray-900">{user.fullName}</p>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg">
+                  {user.fullName.charAt(0).toUpperCase()}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 hover:text-gray-900"
+                  title="Logout"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
+            )}
           </div>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg">
-            {user.fullName.charAt(0).toUpperCase()}
-          </div>
-          <button
-            onClick={handleLogout}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 hover:text-gray-900"
-            title="Logout"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
         </div>
-      )}
-    </div>
-  </div>
-</header>
+      </header>
 
 
       {/* Main Content */}
@@ -140,12 +137,12 @@ export default function DashboardPage(): React.JSX.Element {
             <Sparkles className="w-4 h-4 text-blue-600" />
             <span className="text-sm font-medium text-gray-700">Welcome back to your workspace</span>
           </div>
-          
+
           <h2 className="text-5xl sm:text-6xl font-bold mb-6 text-gray-900">
             Hello, <span className="text-blue-600">{user ? user.fullName.split(' ')[0] : 'Developer'}</span>
             <span className="inline-block animate-wave ml-2"></span>
           </h2>
-          
+
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Your collaborative coding workspace is ready. Start building amazing things together.
           </p>
@@ -207,7 +204,7 @@ export default function DashboardPage(): React.JSX.Element {
                   )}
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <RecentRooms onRoomCountChange={setRoomCount} />
               </div>
@@ -221,7 +218,7 @@ export default function DashboardPage(): React.JSX.Element {
             <h3 className="text-3xl font-bold text-gray-900 mb-3">Why Choose CodeSync?</h3>
             <p className="text-gray-600">Powerful features for seamless collaboration</p>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <div

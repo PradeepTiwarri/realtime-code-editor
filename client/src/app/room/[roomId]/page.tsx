@@ -17,7 +17,7 @@ export default function RoomPage() {
   const [language, setLanguage] = useState('javascript');
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(true);
-  
+
   // ✅ Retrieve state from Zustand store
   const hasHydrated = useUserStore((state) => state.hasHydrated);
   const user = useUserStore((state) => state.user);
@@ -64,36 +64,36 @@ export default function RoomPage() {
   return (
     <div className="flex flex-col h-screen bg-slate-900">
       {/* Header with Dynamic Online Users */}
-      <RoomHeader 
+      <RoomHeader
         onlineUsers={onlineUsers}
+        username={user.fullName}
         onShowHistory={() => setShowVersionHistory(true)}
       />
-      
+
       {/* Room Connection Component (Handles Socket logic and store updates) */}
       <RoomPageConnection />
-      
+
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden relative">
         {/* Main Editor Area */}
         <div className="flex-1 overflow-hidden">
           <MonacoEditor language={language} />
         </div>
-        
+
         {/* Chat Sidebar with Slide Animation */}
-        <div 
-          className={`transition-all duration-300 ease-in-out ${
-            isChatOpen ? 'w-80' : 'w-0'
-          } overflow-hidden bg-slate-800 border-l border-slate-700`}
+        <div
+          className={`transition-all duration-300 ease-in-out ${isChatOpen ? 'w-80' : 'w-0'
+            } overflow-hidden bg-slate-800 border-l border-slate-700`}
         >
           {isChatOpen && (
-            <ChatSidebar 
-              id={user.id} 
+            <ChatSidebar
+              id={user.id}
               name={user.fullName}
               onClose={() => setIsChatOpen(false)}
             />
           )}
         </div>
-        
+
         {/* Floating Chat Toggle Button */}
         {!isChatOpen && (
           <button
@@ -105,12 +105,12 @@ export default function RoomPage() {
           </button>
         )}
       </div>
-      
+
       {/* Version History Modal */}
       {showVersionHistory && (
-        <VersionHistoryModal 
-          roomId={roomId} 
-          onClose={() => setShowVersionHistory(false)} 
+        <VersionHistoryModal
+          roomId={roomId}
+          onClose={() => setShowVersionHistory(false)}
         />
       )}
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Code2, Users, Zap, Terminal, Globe, ArrowRight, Menu, X } from 'lucide-react';
+import { Users, Zap, Terminal, Globe, ArrowRight, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Home() {
@@ -15,12 +15,12 @@ export default function Home() {
         {/* 'px-4 sm:px-8' gives a little padding, 'justify-between' pushes items to edges */}
         <div className="w-full px-4 sm:px-8 h-16 flex items-center justify-between">
           
-          {/* Logo (Extreme Left) */}
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 p-2 rounded-lg">
-              <Code2 className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-tight">CodeSync</span>
+          {/* Brand Name (Extreme Left) */}
+          <div className="flex items-center">
+            <span className="text-xl font-bold tracking-tight">
+              <span className="text-gray-900">Code</span>
+              <span className="text-blue-600">Sync</span>
+            </span>
           </div>
 
           {/* Desktop Auth Buttons (Extreme Right) */}
@@ -177,12 +177,12 @@ export default function Home() {
       <footer className="bg-white border-t border-gray-100 py-8 sm:py-12">
         <div className="w-full px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           
-          {/* Logo (Extreme Left) */}
-          <div className="flex items-center gap-2">
-            <div className="bg-gray-900 p-1.5 rounded-lg">
-              <Code2 className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-semibold text-gray-900">CodeSync</span>
+          {/* Brand Name (Extreme Left) */}
+          <div className="flex items-center">
+            <span className="font-semibold">
+              <span className="text-gray-900">Code</span>
+              <span className="text-blue-600">Sync</span>
+            </span>
           </div>
           
           <div className="text-sm text-gray-500 text-center sm:text-left">

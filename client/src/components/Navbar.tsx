@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Users, ChevronDown, Settings, Clock, Copy, LogOut } from 'lucide-react';
+import VoiceChat from './VoiceChat';
 
 interface User {
   id: string;
@@ -13,10 +14,11 @@ interface User {
 interface NavbarProps {
   onlineUsers?: User[];
   roomId?: string;
+  username?: string;
   onShowHistory?: () => void;
 }
 
-export default function Navbar({ onlineUsers = [], roomId, onShowHistory }: NavbarProps) {
+export default function Navbar({ onlineUsers = [], roomId, username = '', onShowHistory }: NavbarProps) {
   const router = useRouter();
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
@@ -42,7 +44,7 @@ export default function Navbar({ onlineUsers = [], roomId, onShowHistory }: Navb
   const copyRoomId = () => {
     if (roomId) {
       navigator.clipboard.writeText(roomId);
-      
+
       setIsSettingsDropdownOpen(false);
     }
   };
@@ -56,7 +58,7 @@ export default function Navbar({ onlineUsers = [], roomId, onShowHistory }: Navb
   return (
     <nav className="bg-slate-800 border-b border-slate-700 px-6 py-3">
       <div className="flex items-center justify-between">
-        {/* Left: CodeSync Logo */}
+        {/* Left: CodeSync Brand Name */}
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold">
             <span className="text-white">Code</span>
@@ -64,8 +66,12 @@ export default function Navbar({ onlineUsers = [], roomId, onShowHistory }: Navb
           </h1>
         </div>
 
-        {/* Right: Settings & Online Users */}
+        {/* Right: Voice Chat, Settings & Online Users */}
         <div className="flex items-center gap-3">
+          {/* Voice Chat */}
+          {roomId && username && (
+            <VoiceChat roomId={roomId} username={username} />
+          )}
           {/* Settings Dropdown */}
           {roomId && (
             <div className="relative" ref={settingsDropdownRef}>
@@ -132,7 +138,7 @@ export default function Navbar({ onlineUsers = [], roomId, onShowHistory }: Navb
                     <p className="text-sm font-semibold text-white">Online Users ({onlineUsers.length})</p>
                   </div>
                 </div>
-                
+
                 <div className="max-h-64 overflow-y-auto">
                   {onlineUsers.length > 0 ? (
                     onlineUsers.map((user) => (

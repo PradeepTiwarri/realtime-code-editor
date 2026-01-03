@@ -7,6 +7,7 @@ const roomUsers = {};
 const roomCodeMap = {};
 const roomSaveTimers = {};
 const roomChatHistory = {};
+const roomVoiceUsers = {}; // Track users in voice chat: { roomId: [{ socketId, username }] }
 
 function startVersionSaver(roomId, getCurrentCodeFn) {
   const versionInterval = setInterval(async () => {
@@ -28,11 +29,31 @@ function startVersionSaver(roomId, getCurrentCodeFn) {
 const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-    origin: process.env.FRONTEND_URL|| "http://localhost:3000", credentials: true },
+      origin: process.env.FRONTEND_URL || "http://localhost:3000", credentials: true
+    },
     transports: ['websocket', 'polling'],
   });
 
   function handleUserDisconnect(socket) {
+    // Clean up voice chat
+    for (const roomId in roomVoiceUsers) {
+      const voiceUser = roomVoiceUsers[roomId]?.find(u => u.socketId === socket.id);
+      if (voiceUser) {
+        roomVoiceUsers[roomId] = roomVoiceUsers[roomId].filter(u => u.socketId !== socket.id);
+        io.to(roomId).emit("VOICE_USER_LEFT", {
+          roomId,
+          username: voiceUser.username
+        });
+        io.to(roomId).emit("VOICE_USERS", {
+          users: roomVoiceUsers[roomId].map(u => u.username)
+        });
+        if (roomVoiceUsers[roomId].length === 0) {
+          delete roomVoiceUsers[roomId];
+        }
+      }
+    }
+
+    // Clean up room users
     for (const roomId in roomUsers) {
       const initialLength = roomUsers[roomId].length;
       roomUsers[roomId] = roomUsers[roomId].filter(u => u.socketId !== socket.id);
@@ -116,6 +137,117 @@ const initSocket = (server) => {
       if (roomChatHistory[roomId].length > 100) roomChatHistory[roomId].shift();
       io.to(roomId).emit("CHAT_MESSAGE", msg);
     });
+
+    // ==================== VOICE CHAT SIGNALING ====================
+
+    // User joins voice chat
+    socket.on("VOICE_JOIN", ({ roomId }) => {
+      console.log(`🎤 ${socket.username} joining voice in room ${roomId}`);
+
+      if (!roomVoiceUsers[roomId]) {
+        roomVoiceUsers[roomId] = [];
+      }
+
+      // Check if already in voice
+      const exists = roomVoiceUsers[roomId].find(u => u.socketId === socket.id);
+      if (!exists) {
+        roomVoiceUsers[roomId].push({
+          socketId: socket.id,
+          username: socket.username,
+          isMuted: false
+        });
+      }
+
+      // Get list of other voice users (for the joining user to connect to)
+      const otherVoiceUsers = roomVoiceUsers[roomId]
+        .filter(u => u.socketId !== socket.id)
+        .map(u => ({ socketId: u.socketId, username: u.username, isMuted: u.isMuted }));
+
+      // Send existing voice users to the joining user
+      socket.emit("VOICE_USERS_LIST", { users: otherVoiceUsers });
+
+      // Notify others that a new user joined voice
+      socket.to(roomId).emit("VOICE_USER_JOINED", {
+        socketId: socket.id,
+        username: socket.username
+      });
+
+      // Broadcast updated voice users list
+      io.to(roomId).emit("VOICE_USERS", {
+        users: roomVoiceUsers[roomId].map(u => ({
+          username: u.username,
+          isMuted: u.isMuted
+        }))
+      });
+    });
+
+    // User leaves voice chat
+    socket.on("VOICE_LEAVE", ({ roomId }) => {
+      console.log(`🎤 ${socket.username} leaving voice in room ${roomId}`);
+
+      if (roomVoiceUsers[roomId]) {
+        roomVoiceUsers[roomId] = roomVoiceUsers[roomId].filter(u => u.socketId !== socket.id);
+
+        socket.to(roomId).emit("VOICE_USER_LEFT", {
+          socketId: socket.id,
+          username: socket.username
+        });
+
+        io.to(roomId).emit("VOICE_USERS", {
+          users: roomVoiceUsers[roomId].map(u => ({
+            username: u.username,
+            isMuted: u.isMuted
+          }))
+        });
+
+        if (roomVoiceUsers[roomId].length === 0) {
+          delete roomVoiceUsers[roomId];
+        }
+      }
+    });
+
+    // Forward WebRTC offer to specific peer
+    socket.on("VOICE_OFFER", ({ to, offer }) => {
+      console.log(`📡 Forwarding offer from ${socket.id} to ${to}`);
+      io.to(to).emit("VOICE_OFFER", {
+        from: socket.id,
+        offer,
+        username: socket.username
+      });
+    });
+
+    // Forward WebRTC answer to specific peer
+    socket.on("VOICE_ANSWER", ({ to, answer }) => {
+      console.log(`📡 Forwarding answer from ${socket.id} to ${to}`);
+      io.to(to).emit("VOICE_ANSWER", {
+        from: socket.id,
+        answer
+      });
+    });
+
+    // Forward ICE candidate to specific peer
+    socket.on("ICE_CANDIDATE", ({ to, candidate }) => {
+      io.to(to).emit("ICE_CANDIDATE", {
+        from: socket.id,
+        candidate
+      });
+    });
+
+    // Handle mute/unmute toggle
+    socket.on("VOICE_TOGGLE_MUTE", ({ roomId, isMuted }) => {
+      if (roomVoiceUsers[roomId]) {
+        const user = roomVoiceUsers[roomId].find(u => u.socketId === socket.id);
+        if (user) {
+          user.isMuted = isMuted;
+          io.to(roomId).emit("VOICE_USER_MUTE_CHANGED", {
+            username: socket.username,
+            isMuted
+          });
+        }
+      }
+    });
+
+    // ==================== END VOICE CHAT ====================
 
     socket.on("disconnect", () => handleUserDisconnect(socket));
   });

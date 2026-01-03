@@ -11,20 +11,23 @@ interface User {
 
 interface RoomHeaderProps {
   onlineUsers?: User[];
+  username?: string;
   onShowHistory?: () => void;
 }
 
-export default function RoomHeader({ onlineUsers = [], onShowHistory }: RoomHeaderProps) {
+export default function RoomHeader({ onlineUsers = [], username, onShowHistory }: RoomHeaderProps) {
   const params = useParams();
   const roomId = params?.roomId as string;
 
   return (
     <div>
-      <Navbar 
-        onlineUsers={onlineUsers} 
+      <Navbar
+        onlineUsers={onlineUsers}
         roomId={roomId}
+        username={username}
         onShowHistory={onShowHistory}
       />
     </div>
   );
 }
+
