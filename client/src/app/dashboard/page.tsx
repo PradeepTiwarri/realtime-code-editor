@@ -18,7 +18,11 @@ import {
   Sparkles,
   TrendingUp,
   Award,
-  LogOut
+  LogOut,
+  Mic,
+  PenTool,
+  History,
+  Globe
 } from 'lucide-react';
 
 export default function DashboardPage(): React.JSX.Element {
@@ -56,31 +60,45 @@ export default function DashboardPage(): React.JSX.Element {
   const features = [
     {
       icon: <Code2 className="w-6 h-6" />,
-      title: "Live Coding",
-      description: "Real-time collaboration with syntax highlighting",
+      title: "Live Code Editor",
+      description: "Monaco-powered editor with 50+ language support",
       color: "bg-blue-500",
       lightBg: "bg-blue-50"
     },
     {
       icon: <MessageSquare className="w-6 h-6" />,
       title: "Team Chat",
-      description: "Integrated messaging for instant communication",
+      description: "Real-time messaging with your collaborators",
       color: "bg-purple-500",
       lightBg: "bg-purple-50"
     },
     {
-      icon: <Clock className="w-6 h-6" />,
+      icon: <Mic className="w-6 h-6" />,
+      title: "Voice Chat",
+      description: "Crystal-clear WebRTC voice communication",
+      color: "bg-rose-500",
+      lightBg: "bg-rose-50"
+    },
+    {
+      icon: <PenTool className="w-6 h-6" />,
+      title: "Whiteboard",
+      description: "Draw diagrams and sketch ideas together",
+      color: "bg-emerald-500",
+      lightBg: "bg-emerald-50"
+    },
+    {
+      icon: <History className="w-6 h-6" />,
       title: "Version History",
-      description: "Automatic saves with restore capabilities",
+      description: "Automatic saves with one-click restore",
       color: "bg-orange-500",
       lightBg: "bg-orange-50"
     },
     {
       icon: <Shield className="w-6 h-6" />,
       title: "Secure Rooms",
-      description: "Encrypted sessions with access control",
-      color: "bg-emerald-500",
-      lightBg: "bg-emerald-50"
+      description: "Private encrypted coding sessions",
+      color: "bg-cyan-500",
+      lightBg: "bg-cyan-50"
     }
   ];
 
@@ -92,12 +110,11 @@ export default function DashboardPage(): React.JSX.Element {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Header - Full width with extreme left/right alignment */}
-      {/* Header - Full width with extreme left/right alignment */}
+      {/* Header */}
       <header className="bg-white sticky top-0 z-50 shadow-sm">
         <div className="w-full px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* Brand Name - Extreme Left */}
+            {/* Brand Name */}
             <div className="flex items-center">
               <h1 className="text-2xl sm:text-3xl font-bold">
                 <span className="text-gray-900">Code</span>
@@ -105,7 +122,7 @@ export default function DashboardPage(): React.JSX.Element {
               </h1>
             </div>
 
-            {/* User Info - Extreme Right */}
+            {/* User Info */}
             {user && (
               <div className="flex items-center gap-4">
                 <div className="text-right hidden sm:block">
@@ -128,7 +145,6 @@ export default function DashboardPage(): React.JSX.Element {
         </div>
       </header>
 
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
@@ -139,12 +155,12 @@ export default function DashboardPage(): React.JSX.Element {
           </div>
 
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-gray-900">
-            Hello, <span className="text-blue-600">{user ? user.fullName.split(' ')[0] : 'Developer'}</span>
-            <span className="inline-block animate-wave ml-2"></span>
+            Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{user ? user.fullName.split(' ')[0] : 'Developer'}</span>
+            <span className="inline-block animate-wave ml-2">👋</span>
           </h2>
 
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-            Your collaborative coding workspace is ready. Start building amazing things together.
+            Your collaborative coding workspace is ready. Code, chat, call, and draw—all in one place.
           </p>
 
           {/* CTA Buttons */}
@@ -215,23 +231,40 @@ export default function DashboardPage(): React.JSX.Element {
         {/* Features Grid */}
         <div className="mb-12">
           <div className="text-center mb-10">
-            <h3 className="text-3xl font-bold text-gray-900 mb-3">Why Choose CodeSync?</h3>
-            <p className="text-gray-600">Powerful features for seamless collaboration</p>
+            <h3 className="text-3xl font-bold text-gray-900 mb-3">All-in-One Collaboration</h3>
+            <p className="text-gray-600">Everything you need for seamless remote pair programming</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="group relative bg-white rounded-2xl border border-gray-200 p-6 hover:border-blue-300 hover:shadow-xl transition-all hover:scale-105"
+                className="group relative bg-white rounded-2xl border border-gray-200 p-6 hover:border-blue-300 hover:shadow-xl transition-all hover:-translate-y-1"
               >
-                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${feature.color} ${feature.lightBg} mb-4 group-hover:scale-110 transition-transform`}>
+                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${feature.color} mb-4 group-hover:scale-110 transition-transform`}>
                   <div className="text-white">{feature.icon}</div>
                 </div>
                 <h4 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h4>
                 <p className="text-sm text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Quick Tips Banner */}
+        <div className="mb-12 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl p-1">
+          <div className="bg-white rounded-xl p-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl text-white">
+                <Zap className="w-6 h-6" />
+              </div>
+              <div className="text-center sm:text-left flex-1">
+                <h4 className="font-bold text-gray-900 mb-1">Pro Tip: Use all features in your room!</h4>
+                <p className="text-sm text-gray-600">
+                  Click <span className="font-semibold text-purple-600">🎙️ Voice</span> to talk, <span className="font-semibold text-emerald-600">🎨 Whiteboard</span> to draw, and <span className="font-semibold text-blue-600">📜 History</span> to restore code.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -253,10 +286,17 @@ export default function DashboardPage(): React.JSX.Element {
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-gray-900">Code</span>
+              <span className="font-bold text-blue-600">Sync</span>
+            </div>
             <p className="text-gray-600 text-sm">
-              © 2025 CodeSync. Built with ❤️ for developers.
+              © {new Date().getFullYear()} CodeSync. Built with ❤️ for developers.
             </p>
+            <div className="flex items-center gap-4 text-gray-400">
+              <Globe className="w-5 h-5 hover:text-gray-900 cursor-pointer transition-colors" />
+            </div>
           </div>
         </div>
       </footer>
