@@ -156,7 +156,7 @@ export default function DashboardPage(): React.JSX.Element {
 
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-gray-900">
             Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{user ? user.fullName.split(' ')[0] : 'Developer'}</span>
-            <span className="inline-block animate-wave ml-2">👋</span>
+            {/* <span className="inline-block animate-wave ml-2">👋</span> */}
           </h2>
 
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
