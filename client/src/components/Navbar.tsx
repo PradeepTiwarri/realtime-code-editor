@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Users, ChevronDown, Settings, Clock, Copy, LogOut, Menu, X, PenTool } from 'lucide-react';
 import VoiceChat from './VoiceChat';
+import CodeSyncLogo from './CodeSyncLogo';
 
 interface User {
   id: string;
@@ -66,6 +67,7 @@ export default function Navbar({ onlineUsers = [], roomId, username = '', onShow
       <div className="flex items-center justify-between">
         {/* Left: CodeSync Brand Name */}
         <div className="flex items-center gap-2">
+          <CodeSyncLogo size={32} />
           <h1 className="text-xl sm:text-2xl font-bold">
             <span className="text-white">Code</span>
             <span className="text-blue-400">Sync</span>

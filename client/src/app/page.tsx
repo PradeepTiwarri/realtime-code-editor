@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import CodeSyncLogo from '@/components/CodeSyncLogo';
 import {
   Users,
   Zap,
@@ -83,7 +84,8 @@ export default function Home() {
         <div className="w-full px-4 sm:px-8 h-16 flex items-center justify-between">
 
           {/* Brand Name */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <CodeSyncLogo size={28} />
             <span className="text-xl font-bold tracking-tight">
               <span className="text-gray-900">Code</span>
               <span className="text-blue-600">Sync</span>
@@ -295,7 +297,8 @@ export default function Home() {
         <div className="w-full px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
 
           {/* Brand Name */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <CodeSyncLogo size={24} />
             <span className="font-semibold">
               <span className="text-gray-900">Code</span>
               <span className="text-blue-600">Sync</span>
